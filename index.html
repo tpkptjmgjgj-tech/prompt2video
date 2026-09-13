@@ -6,9 +6,7 @@
   <title>US Creator AI</title>
 
   <style>
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
     body {
       margin: 0;
@@ -23,10 +21,7 @@
       padding: 25px 18px;
     }
 
-    h1 {
-      text-align: center;
-      margin-bottom: 8px;
-    }
+    h1 { text-align: center; margin-bottom: 8px; }
 
     .subtitle {
       text-align: center;
@@ -90,12 +85,8 @@
       cursor: pointer;
     }
 
-    button:active {
-      transform: scale(.98);
-    }
-
-    #result {
-      display: none;
+    button:disabled {
+      opacity: .6;
     }
 
     .resultBox {
@@ -112,6 +103,16 @@
       background: #333;
       font-size: 14px;
       padding: 10px;
+    }
+
+    #result {
+      display: none;
+    }
+
+    #status {
+      text-align: center;
+      margin-top: 12px;
+      color: #666;
     }
   </style>
 </head>
@@ -134,7 +135,7 @@
 
     <label>Content Type</label>
 
-    <div class="options">
+    <div class="options" id="typeOptions">
       <div class="option active" onclick="selectType(this,'Facts')">
         🇺🇸 Facts
       </div>
@@ -150,7 +151,7 @@
 
     <label>Duration</label>
 
-    <div class="options">
+    <div class="options" id="durationOptions">
       <div class="option active" onclick="selectDuration(this,30)">
         30 Seconds
       </div>
@@ -164,12 +165,13 @@
       </div>
     </div>
 
-    <button onclick="generateContent()">
+    <button id="generateBtn" onclick="generateContent()">
       ⚡ Generate US Content
     </button>
 
-  </div>
+    <div id="status"></div>
 
+  </div>
 
   <div class="card" id="result">
 
@@ -198,154 +200,103 @@
 
 </div>
 
-
 <script>
 
 let selectedType = "Facts";
 let selectedDuration = 30;
 
-
 function selectType(element, type) {
-
-  document.querySelectorAll(".options .option")
-    .forEach(el => {
-
-      if (
-        el.innerText.includes("Facts") ||
-        el.innerText.includes("Crime") ||
-        el.innerText.includes("Entertainment")
-      ) {
-        el.classList.remove("active");
-      }
-
-    });
+  document.querySelectorAll("#typeOptions .option")
+    .forEach(el => el.classList.remove("active"));
 
   element.classList.add("active");
-
   selectedType = type;
 }
 
-
 function selectDuration(element, duration) {
-
-  const options = element.parentElement.children;
-
-  for (let option of options) {
-    option.classList.remove("active");
-  }
+  document.querySelectorAll("#durationOptions .option")
+    .forEach(el => el.classList.remove("active"));
 
   element.classList.add("active");
-
   selectedDuration = duration;
 }
 
-
-function generateContent() {
+async function generateContent() {
 
   const idea = document.getElementById("idea").value.trim();
+  const button = document.getElementById("generateBtn");
+  const status = document.getElementById("status");
 
   if (!idea) {
     alert("Please enter your Nepali idea first.");
     return;
   }
 
+  button.disabled = true;
+  button.innerText = "⏳ AI is generating...";
+  status.innerText = "Please wait...";
 
-  let hook = "";
-  let script = "";
+  try {
 
+    const response = await fetch("/api/generate", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        idea: idea,
+        type: selectedType,
+        duration: selectedDuration
+      })
+    });
 
-  if (selectedType === "Facts") {
+    const data = await response.json();
 
-    hook =
-      "You won't believe this incredible fact about America!";
+    if (!response.ok) {
+      throw new Error(data.error || "AI generation failed");
+    }
 
-    script =
-      "Did you know this fascinating fact? " +
-      idea +
-      " Here's what makes it so interesting. " +
-      "Millions of people may not know about this surprising detail. " +
-      "And the most interesting part is that there is even more to discover. " +
-      "Follow for more amazing facts!";
+    document.getElementById("hook").innerText =
+      data.hook || "";
+
+    document.getElementById("script").innerText =
+      data.script || "";
+
+    document.getElementById("title").innerText =
+      data.title || "";
+
+    document.getElementById("description").innerText =
+      data.description || "";
+
+    document.getElementById("tags").innerText =
+      data.tags || "";
+
+    document.getElementById("result").style.display = "block";
+
+    status.innerText = "✅ Generated successfully!";
+
+    window.scrollTo({
+      top: document.getElementById("result").offsetTop,
+      behavior: "smooth"
+    });
+
+  } catch (error) {
+
+    console.error(error);
+
+    status.innerText = "❌ " + error.message;
+
+    alert(
+      "AI connection is not ready yet. Backend setup is required."
+    );
+
+  } finally {
+
+    button.disabled = false;
+    button.innerText = "⚡ Generate US Content";
 
   }
-
-
-  else if (selectedType === "Crime") {
-
-    hook =
-      "This mysterious case shocked people across America...";
-
-    script =
-      "This is one of those cases that is hard to forget. " +
-      idea +
-      " The investigation raised serious questions, " +
-      "and people were left wondering what really happened. " +
-      "Even today, the story continues to attract attention. " +
-      "Follow for more true crime stories.";
-
-  }
-
-
-  else {
-
-    hook =
-      "This might be one of the most unbelievable stories you'll hear today!";
-
-    script =
-      "Imagine seeing this happen in real life. " +
-      idea +
-      " The story quickly became interesting because of what happened next. " +
-      "People couldn't stop talking about it. " +
-      "Would you believe this if you saw it yourself? " +
-      "Follow for more amazing stories!";
-
-  }
-
-
-  const title =
-    "You Won't Believe This 😱 | US " +
-    selectedType +
-    " #Shorts";
-
-
-  const description =
-    "Discover this amazing US-style " +
-    selectedType.toLowerCase() +
-    " story. " +
-    "Watch until the end and follow for more short-form content.";
-
-
-  const tags =
-    "#USA #USFacts #Shorts #Viral #Trending #" +
-    selectedType +
-    " #YouTubeShorts";
-
-
-  document.getElementById("hook").innerText = hook;
-
-  document.getElementById("script").innerText =
-    script + "\n\nDuration: " +
-    selectedDuration +
-    " seconds";
-
-  document.getElementById("title").innerText = title;
-
-  document.getElementById("description").innerText =
-    description;
-
-  document.getElementById("tags").innerText =
-    tags;
-
-
-  document.getElementById("result").style.display = "block";
-
-  window.scrollTo({
-    top: document.getElementById("result").offsetTop,
-    behavior: "smooth"
-  });
-
 }
-
 
 function copyAll() {
 
@@ -365,18 +316,15 @@ function copyAll() {
     "\n\nTAGS:\n" +
     document.getElementById("tags").innerText;
 
-
   navigator.clipboard.writeText(text)
-    .then(() => {
-      alert("Copied successfully!");
-    })
-    .catch(() => {
-      alert("Copy failed. Please copy manually.");
-    });
+    .then(() => alert("Copied successfully!"))
+    .catch(() => alert("Copy failed."));
 
 }
 
 </script>
 
 </body>
-</html>
+</html>    
+    
+    
