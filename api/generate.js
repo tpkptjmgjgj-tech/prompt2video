@@ -1,29 +1,55 @@
 export default async function handler(req, res) {
   if (req.method !== "POST") {
-    return res.status(405).json({ error: "POST method required" });
+    return res.status(405).json({
+      error: "POST method required"
+    });
   }
 
   try {
-    const { prompt } = req.body;
+    const { prompt } = req.body || {};
 
     if (!prompt) {
-      return res.status(400).json({ error: "Prompt is required" });
+      return res.status(400).json({
+        error: "Prompt is required"
+      });
     }
 
-    // Demo response — पछि यहाँ वास्तविक AI API जोड्न सकिन्छ
-    const result = {
-      success: true,
-      prompt: prompt,
-      message: "AI generation request received",
-      videoPrompt: `Create a cinematic short video based on: ${prompt}`
-    };
+    const apiKey = process.env.OPENAI_API_KEY;
 
-    return res.status(200).json(result);
+    if (!apiKey) {
+      return res.status(500).json({
+        error: "OPENAI_API_KEY is not configured"
+      });
+    }
+
+    const response = await fetch("https://api.openai.com/v1/responses", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${apiKey}`
+      },
+      body: JSON.stringify({
+        model: "gpt-5",
+        input: prompt
+      })
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      return res.status(response.status).json({
+        error: data.error?.message || "OpenAI API error"
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      result: data.output_text || ""
+    });
 
   } catch (error) {
     return res.status(500).json({
-      success: false,
-      error: "Server error"
+      error: error.message || "Server error"
     });
   }
 }
