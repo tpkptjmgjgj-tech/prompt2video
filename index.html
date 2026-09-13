@@ -8,77 +8,38 @@
   <style>
     * {
       box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: Arial, sans-serif;
     }
 
     body {
-      background: #f5f7fb;
-      color: #172033;
-      min-height: 100vh;
-    }
-
-    header {
-      background: #111827;
-      color: white;
-      padding: 18px 20px;
-      position: sticky;
-      top: 0;
-      z-index: 10;
-    }
-
-    .header-inner {
-      max-width: 1000px;
-      margin: auto;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .logo {
-      font-size: 21px;
-      font-weight: bold;
-    }
-
-    .badge {
-      background: #2563eb;
-      padding: 7px 12px;
-      border-radius: 20px;
-      font-size: 12px;
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f4f6f8;
+      color: #111;
     }
 
     .container {
-      max-width: 1000px;
-      margin: 30px auto;
-      padding: 0 16px;
+      max-width: 700px;
+      margin: auto;
+      padding: 25px 18px;
     }
 
-    .hero {
+    h1 {
       text-align: center;
+      margin-bottom: 8px;
+    }
+
+    .subtitle {
+      text-align: center;
+      color: #666;
       margin-bottom: 25px;
-    }
-
-    .hero h1 {
-      font-size: 34px;
-      margin-bottom: 10px;
-    }
-
-    .hero h1 span {
-      color: #2563eb;
-    }
-
-    .hero p {
-      color: #64748b;
-      line-height: 1.6;
     }
 
     .card {
       background: white;
-      border-radius: 18px;
-      padding: 22px;
-      box-shadow: 0 8px 30px rgba(15, 23, 42, 0.08);
-      margin-bottom: 20px;
+      padding: 20px;
+      border-radius: 16px;
+      box-shadow: 0 4px 15px rgba(0,0,0,.08);
+      margin-bottom: 18px;
     }
 
     label {
@@ -89,607 +50,330 @@
 
     textarea {
       width: 100%;
-      min-height: 130px;
-      resize: vertical;
-      border: 1px solid #dbe1ea;
-      border-radius: 12px;
+      min-height: 120px;
       padding: 14px;
-      font-size: 15px;
-      outline: none;
-    }
-
-    textarea:focus,
-    select:focus {
-      border-color: #2563eb;
-    }
-
-    .grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 15px;
-      margin-top: 18px;
-    }
-
-    select {
-      width: 100%;
-      padding: 13px;
-      border: 1px solid #dbe1ea;
+      border: 1px solid #ccc;
       border-radius: 10px;
-      background: white;
-      font-size: 15px;
+      font-size: 16px;
+      resize: vertical;
     }
 
-    .generate-btn {
+    .options {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 20px;
+    }
+
+    .option {
+      border: 1px solid #ccc;
+      background: white;
+      padding: 10px 14px;
+      border-radius: 20px;
+      cursor: pointer;
+    }
+
+    .option.active {
+      background: #111;
+      color: white;
+    }
+
+    button {
       width: 100%;
       border: none;
-      background: #2563eb;
+      padding: 15px;
+      border-radius: 12px;
+      background: #111;
       color: white;
-      padding: 15px;
-      border-radius: 12px;
-      margin-top: 20px;
       font-size: 17px;
       font-weight: bold;
       cursor: pointer;
     }
 
-    .generate-btn:hover {
-      background: #1d4ed8;
+    button:active {
+      transform: scale(.98);
     }
 
-    .generate-btn:disabled {
-      opacity: 0.6;
-      cursor: wait;
-    }
-
-    #results {
+    #result {
       display: none;
     }
 
-    .result-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 15px;
-    }
-
-    .result-section {
-      border: 1px solid #e2e8f0;
-      border-radius: 13px;
-      padding: 16px;
-      margin-bottom: 15px;
-      background: #fbfdff;
-    }
-
-    .result-section h3 {
-      margin-bottom: 10px;
-      font-size: 17px;
-    }
-
-    .result-text {
-      white-space: pre-wrap;
-      line-height: 1.65;
-      color: #334155;
-    }
-
-    .copy-btn {
-      border: none;
-      background: #e2e8f0;
-      padding: 8px 12px;
-      border-radius: 8px;
-      cursor: pointer;
-      font-weight: bold;
+    .resultBox {
+      background: #f7f7f7;
+      padding: 15px;
+      border-radius: 10px;
       margin-top: 10px;
+      white-space: pre-wrap;
+      line-height: 1.6;
     }
 
-    .copy-btn:hover {
-      background: #cbd5e1;
-    }
-
-    .scene {
-      background: white;
-      border: 1px solid #e2e8f0;
-      border-radius: 12px;
-      padding: 15px;
-      margin-top: 12px;
-    }
-
-    .scene-title {
-      font-weight: bold;
-      color: #2563eb;
-      margin-bottom: 8px;
-    }
-
-    .loading {
-      display: none;
-      text-align: center;
-      padding: 20px;
-      color: #64748b;
-    }
-
-    footer {
-      text-align: center;
-      color: #94a3b8;
-      padding: 30px 10px;
-      font-size: 13px;
-    }
-
-    @media (max-width: 650px) {
-      .hero h1 {
-        font-size: 27px;
-      }
-
-      .grid {
-        grid-template-columns: 1fr;
-      }
-
-      .card {
-        padding: 17px;
-      }
+    .copyBtn {
+      margin-top: 10px;
+      background: #333;
+      font-size: 14px;
+      padding: 10px;
     }
   </style>
 </head>
 
 <body>
 
-<header>
-  <div class="header-inner">
-    <div class="logo">🇺🇸 US Creator AI</div>
-    <div class="badge">DEMO v1.0</div>
-  </div>
-</header>
+<div class="container">
 
-<main class="container">
+  <h1>🇺🇸 US Creator AI</h1>
+  <p class="subtitle">Nepali Idea → US Content</p>
 
-  <section class="hero">
-    <h1>Nepali Idea → <span>US Content</span></h1>
-    <p>
-      Turn your Nepali idea into a US-style YouTube Short concept.
-    </p>
-  </section>
+  <div class="card">
 
-  <section class="card">
+    <label>🇳🇵 Your Idea</label>
 
-    <label for="idea">🇳🇵 Your Idea</label>
+    <textarea id="idea"
+      placeholder="Example: एउटा नेपाली गाउँमा अनौठो घटना भयो..."></textarea>
 
-    <textarea
-      id="idea"
-      placeholder="Example: अमेरिकाको एउटा अचम्मको fact बारे 60 second video बनाऊ..."
-    ></textarea>
+    <br><br>
 
-    <div class="grid">
+    <label>Content Type</label>
 
-      <div>
-        <label for="category">Content Type</label>
-
-        <select id="category">
-          <option value="Facts">🇺🇸 Facts</option>
-          <option value="Crime">🔎 Crime</option>
-          <option value="Entertainment">🎬 Entertainment</option>
-        </select>
+    <div class="options">
+      <div class="option active" onclick="selectType(this,'Facts')">
+        🇺🇸 Facts
       </div>
 
-      <div>
-        <label for="duration">Duration</label>
-
-        <select id="duration">
-          <option value="30">30 Seconds</option>
-          <option value="60" selected>60 Seconds</option>
-          <option value="90">90 Seconds</option>
-        </select>
+      <div class="option" onclick="selectType(this,'Crime')">
+        🔎 Crime
       </div>
 
+      <div class="option" onclick="selectType(this,'Entertainment')">
+        🎬 Entertainment
+      </div>
     </div>
 
-    <button class="generate-btn" id="generateBtn" onclick="generateContent()">
+    <label>Duration</label>
+
+    <div class="options">
+      <div class="option active" onclick="selectDuration(this,30)">
+        30 Seconds
+      </div>
+
+      <div class="option" onclick="selectDuration(this,60)">
+        60 Seconds
+      </div>
+
+      <div class="option" onclick="selectDuration(this,90)">
+        90 Seconds
+      </div>
+    </div>
+
+    <button onclick="generateContent()">
       ⚡ Generate US Content
     </button>
 
-    <div class="loading" id="loading">
-      🤖 Creating your content...
-    </div>
-
-  </section>
+  </div>
 
 
-  <section class="card" id="results">
+  <div class="card" id="result">
 
-    <div class="result-header">
-      <h2>Generated Content</h2>
-      <button class="copy-btn" onclick="copyEverything()">
-        📋 Copy All
-      </button>
-    </div>
+    <h2>🇺🇸 Generated Content</h2>
 
-    <div class="result-section">
-      <h3>🔥 Viral Hook</h3>
-      <div class="result-text" id="hook"></div>
-      <button class="copy-btn" onclick="copyElement('hook')">Copy</button>
-    </div>
+    <label>🔥 Hook</label>
+    <div class="resultBox" id="hook"></div>
 
-    <div class="result-section">
-      <h3>🎙️ US English Voice-over</h3>
-      <div class="result-text" id="script"></div>
-      <button class="copy-btn" onclick="copyElement('script')">Copy</button>
-    </div>
+    <label>🎬 US-Style Script</label>
+    <div class="resultBox" id="script"></div>
 
-    <div class="result-section">
-      <h3>🎬 10-Second Scenes</h3>
-      <div id="scenes"></div>
-    </div>
+    <label>📌 YouTube Title</label>
+    <div class="resultBox" id="title"></div>
 
-    <div class="result-section">
-      <h3>🖼️ Thumbnail Text</h3>
-      <div class="result-text" id="thumbnail"></div>
-      <button class="copy-btn" onclick="copyElement('thumbnail')">Copy</button>
-    </div>
+    <label>📝 Description</label>
+    <div class="resultBox" id="description"></div>
 
-    <div class="result-section">
-      <h3>🏷️ YouTube Title</h3>
-      <div class="result-text" id="title"></div>
-      <button class="copy-btn" onclick="copyElement('title')">Copy</button>
-    </div>
+    <label>#️⃣ Tags</label>
+    <div class="resultBox" id="tags"></div>
 
-    <div class="result-section">
-      <h3>📄 Description</h3>
-      <div class="result-text" id="description"></div>
-      <button class="copy-btn" onclick="copyElement('description')">Copy</button>
-    </div>
+    <button class="copyBtn" onclick="copyAll()">
+      📋 Copy Everything
+    </button>
 
-    <div class="result-section">
-      <h3>#️⃣ Tags</h3>
-      <div class="result-text" id="tags"></div>
-      <button class="copy-btn" onclick="copyElement('tags')">Copy</button>
-    </div>
+  </div>
 
-  </section>
-
-</main>
-
-<footer>
-  US Creator AI — Prototype
-</footer>
+</div>
 
 
 <script>
 
+let selectedType = "Facts";
+let selectedDuration = 30;
+
+
+function selectType(element, type) {
+
+  document.querySelectorAll(".options .option")
+    .forEach(el => {
+
+      if (
+        el.innerText.includes("Facts") ||
+        el.innerText.includes("Crime") ||
+        el.innerText.includes("Entertainment")
+      ) {
+        el.classList.remove("active");
+      }
+
+    });
+
+  element.classList.add("active");
+
+  selectedType = type;
+}
+
+
+function selectDuration(element, duration) {
+
+  const options = element.parentElement.children;
+
+  for (let option of options) {
+    option.classList.remove("active");
+  }
+
+  element.classList.add("active");
+
+  selectedDuration = duration;
+}
+
+
 function generateContent() {
 
   const idea = document.getElementById("idea").value.trim();
-  const category = document.getElementById("category").value;
-  const duration = Number(document.getElementById("duration").value);
 
   if (!idea) {
-    alert("Please enter your idea first.");
+    alert("Please enter your Nepali idea first.");
     return;
   }
 
-  const button = document.getElementById("generateBtn");
-  const loading = document.getElementById("loading");
-  const results = document.getElementById("results");
 
-  button.disabled = true;
-  loading.style.display = "block";
-  results.style.display = "none";
-
-  /*
-    DEMO DELAY
-
-    Later we will replace this section
-    with a real AI API request.
-  */
-
-  setTimeout(() => {
-
-    const hook = createHook(category, idea);
-    const script = createScript(category, idea, duration);
-    const scenes = createScenes(category, idea, duration);
-
-    document.getElementById("hook").textContent = hook;
-    document.getElementById("script").textContent = script;
-
-    document.getElementById("thumbnail").textContent =
-      createThumbnail(category);
-
-    document.getElementById("title").textContent =
-      createTitle(category, idea);
-
-    document.getElementById("description").textContent =
-      createDescription(category, idea);
-
-    document.getElementById("tags").textContent =
-      createTags(category);
-
-    renderScenes(scenes);
-
-    loading.style.display = "none";
-    results.style.display = "block";
-    button.disabled = false;
-
-    window.scrollTo({
-      top: results.offsetTop - 20,
-      behavior: "smooth"
-    });
-
-  }, 1200);
-}
+  let hook = "";
+  let script = "";
 
 
-/* -----------------------------
-   HOOK GENERATOR
------------------------------- */
+  if (selectedType === "Facts") {
 
-function createHook(category, idea) {
+    hook =
+      "You won't believe this incredible fact about America!";
 
-  if (category === "Facts") {
-    return `You probably didn't know this about America... and once you hear it, you'll never look at the U.S. the same way again.`;
-  }
-
-  if (category === "Crime") {
-    return `This case shocked America — and the strangest part is what happened next.`;
-  }
-
-  return `Almost nobody is talking about this... but here's what you need to know.`;
-}
-
-
-/* -----------------------------
-   SCRIPT GENERATOR
------------------------------- */
-
-function createScript(category, idea, duration) {
-
-  const words = duration === 30
-    ? "about 70 words"
-    : duration === 60
-    ? "about 140 words"
-    : "about 210 words";
-
-  return `VOICE-OVER (${words})
-
-Here's something you should know about this story.
-
-${idea}
-
-At first, this might sound ordinary. But when you look closer, there is a much more interesting story behind it.
-
-The key detail is what makes this topic so fascinating to people across the United States.
-
-And that's why this story continues to get attention.
-
-What do you think about it?
-
-Follow for more American facts, stories, and discoveries.`;
-}
-
-
-/* -----------------------------
-   SCENE GENERATOR
------------------------------- */
-
-function createScenes(category, idea, duration) {
-
-  const sceneCount = Math.max(3, Math.ceil(duration / 10));
-
-  const scenes = [];
-
-  for (let i = 1; i <= sceneCount; i++) {
-
-    scenes.push({
-      number: i,
-
-      voice:
-        `Scene ${i}: Narration continues the story and reveals the next important detail.`,
-
-      image:
-        `Photorealistic cinematic scene related to "${idea}", American setting, realistic people, documentary photography, natural lighting, highly detailed, 9:16 vertical composition.`,
-
-      video:
-        `Cinematic 10-second vertical video showing a realistic American environment related to "${idea}", natural camera movement, realistic lighting, documentary style, detailed environment, smooth motion, 9:16.`
-    });
+    script =
+      "Did you know this fascinating fact? " +
+      idea +
+      " Here's what makes it so interesting. " +
+      "Millions of people may not know about this surprising detail. " +
+      "And the most interesting part is that there is even more to discover. " +
+      "Follow for more amazing facts!";
 
   }
 
-  return scenes;
-}
 
+  else if (selectedType === "Crime") {
 
-/* -----------------------------
-   TITLE
------------------------------- */
+    hook =
+      "This mysterious case shocked people across America...";
 
-function createTitle(category, idea) {
+    script =
+      "This is one of those cases that is hard to forget. " +
+      idea +
+      " The investigation raised serious questions, " +
+      "and people were left wondering what really happened. " +
+      "Even today, the story continues to attract attention. " +
+      "Follow for more true crime stories.";
 
-  if (category === "Facts") {
-    return `The Amazing American Fact You Probably Never Knew 🇺🇸`;
   }
 
-  if (category === "Crime") {
-    return `The Mystery That Shocked America 🔎`;
+
+  else {
+
+    hook =
+      "This might be one of the most unbelievable stories you'll hear today!";
+
+    script =
+      "Imagine seeing this happen in real life. " +
+      idea +
+      " The story quickly became interesting because of what happened next. " +
+      "People couldn't stop talking about it. " +
+      "Would you believe this if you saw it yourself? " +
+      "Follow for more amazing stories!";
+
   }
 
-  return `The Story Everyone Is Talking About 🇺🇸`;
-}
+
+  const title =
+    "You Won't Believe This 😱 | US " +
+    selectedType +
+    " #Shorts";
 
 
-/* -----------------------------
-   DESCRIPTION
------------------------------- */
-
-function createDescription(category, idea) {
-
-  return `Discover an interesting American ${category.toLowerCase()} story.
-
-In this video, we explore:
-• The story
-• The surprising details
-• Why people are talking about it
-
-Subscribe for more USA stories, facts, and interesting content.
-
-#USA #America #Shorts`;
-}
+  const description =
+    "Discover this amazing US-style " +
+    selectedType.toLowerCase() +
+    " story. " +
+    "Watch until the end and follow for more short-form content.";
 
 
-/* -----------------------------
-   TAGS
------------------------------- */
-
-function createTags(category) {
-
-  if (category === "Facts") {
-    return "#USA #America #AmericanFacts #Facts #DidYouKnow #InterestingFacts #USAFacts #Shorts #YouTubeShorts";
-  }
-
-  if (category === "Crime") {
-    return "#TrueCrime #USACrime #CrimeStory #Mystery #CrimeDocumentary #America #Shorts #TrueCrimeCommunity";
-  }
-
-  return "#USA #America #Entertainment #Trending #Viral #USATrends #Shorts #YouTubeShorts";
-}
+  const tags =
+    "#USA #USFacts #Shorts #Viral #Trending #" +
+    selectedType +
+    " #YouTubeShorts";
 
 
-/* -----------------------------
-   THUMBNAIL
------------------------------- */
+  document.getElementById("hook").innerText = hook;
 
-function createThumbnail(category) {
+  document.getElementById("script").innerText =
+    script + "\n\nDuration: " +
+    selectedDuration +
+    " seconds";
 
-  if (category === "Facts") {
-    return "YOU DIDN'T KNOW THIS! 🇺🇸";
-  }
+  document.getElementById("title").innerText = title;
 
-  if (category === "Crime") {
-    return "THE MYSTERY NO ONE SOLVED";
-  }
+  document.getElementById("description").innerText =
+    description;
 
-  return "EVERYONE IS TALKING ABOUT THIS!";
-}
+  document.getElementById("tags").innerText =
+    tags;
 
 
-/* -----------------------------
-   RENDER SCENES
------------------------------- */
+  document.getElementById("result").style.display = "block";
 
-function renderScenes(scenes) {
-
-  const container = document.getElementById("scenes");
-
-  container.innerHTML = "";
-
-  scenes.forEach(scene => {
-
-    const div = document.createElement("div");
-
-    div.className = "scene";
-
-    div.innerHTML = `
-      <div class="scene-title">
-        🎬 Scene ${scene.number} — 10 Seconds
-      </div>
-
-      <strong>🎙️ Voice-over</strong>
-      <p class="result-text">${escapeHTML(scene.voice)}</p>
-
-      <br>
-
-      <strong>🖼️ Image Prompt</strong>
-      <p class="result-text">${escapeHTML(scene.image)}</p>
-
-      <br>
-
-      <strong>🎥 Video Prompt</strong>
-      <p class="result-text">${escapeHTML(scene.video)}</p>
-
-      <button class="copy-btn"
-        onclick="copyText(
-        ${JSON.stringify(
-          scene.voice +
-          "\\n\\nIMAGE PROMPT:\\n" +
-          scene.image +
-          "\\n\\nVIDEO PROMPT:\\n" +
-          scene.video
-        )}
-        )">
-        Copy Scene
-      </button>
-    `;
-
-    container.appendChild(div);
+  window.scrollTo({
+    top: document.getElementById("result").offsetTop,
+    behavior: "smooth"
   });
+
 }
 
 
-/* -----------------------------
-   COPY FUNCTIONS
------------------------------- */
+function copyAll() {
 
-function copyElement(id) {
+  const text =
+    "HOOK:\n" +
+    document.getElementById("hook").innerText +
 
-  const text = document.getElementById(id).innerText;
+    "\n\nSCRIPT:\n" +
+    document.getElementById("script").innerText +
+
+    "\n\nTITLE:\n" +
+    document.getElementById("title").innerText +
+
+    "\n\nDESCRIPTION:\n" +
+    document.getElementById("description").innerText +
+
+    "\n\nTAGS:\n" +
+    document.getElementById("tags").innerText;
+
 
   navigator.clipboard.writeText(text)
     .then(() => {
-      alert("Copied!");
+      alert("Copied successfully!");
     })
     .catch(() => {
       alert("Copy failed. Please copy manually.");
     });
-}
 
-
-function copyText(text) {
-
-  navigator.clipboard.writeText(text)
-    .then(() => {
-      alert("Copied!");
-    });
-}
-
-
-function copyEverything() {
-
-  const text = `
-US CREATOR AI
-
-VIRAL HOOK:
-${document.getElementById("hook").innerText}
-
-VOICE-OVER:
-${document.getElementById("script").innerText}
-
-THUMBNAIL:
-${document.getElementById("thumbnail").innerText}
-
-TITLE:
-${document.getElementById("title").innerText}
-
-DESCRIPTION:
-${document.getElementById("description").innerText}
-
-TAGS:
-${document.getElementById("tags").innerText}
-`;
-
-  navigator.clipboard.writeText(text)
-    .then(() => {
-      alert("Everything copied!");
-    });
-}
-
-
-/* -----------------------------
-   SECURITY
------------------------------- */
-
-function escapeHTML(text) {
-
-  return text
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#039;");
 }
 
 </script>
