@@ -1,17 +1,13 @@
 export default async function handler(req, res) {
   if (req.method !== "POST") {
-    return res.status(405).json({
-      error: "POST method required"
-    });
+    return res.status(405).json({ error: "POST method required" });
   }
 
   try {
     const { prompt } = req.body || {};
 
     if (!prompt) {
-      return res.status(400).json({
-        error: "Prompt is required"
-      });
+      return res.status(400).json({ error: "Prompt is required" });
     }
 
     const apiKey = process.env.OPENAI_API_KEY;
@@ -44,12 +40,12 @@ export default async function handler(req, res) {
 
     return res.status(200).json({
       success: true,
-      result: data.output_text || ""
+      result: data.output_text || "No response generated"
     });
 
   } catch (error) {
     return res.status(500).json({
-      error: error.message || "Server error"
+      error: error.message
     });
   }
 }
